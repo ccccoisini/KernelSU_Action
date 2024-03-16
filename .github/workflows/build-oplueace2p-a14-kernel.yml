@@ -45,6 +45,8 @@ jobs:
         cd $GITHUB_WORKSPACE/kernel_workspace/kernel_platform/common
         rm -rf KernelSU drivers/kernelsu
         curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s main
+        KSU_VERSION=$(cd KernelSU && expr $(/usr/bin/git rev-list --count HEAD) + 10200)
+        echo "UPLOADNAME=-KSU_$KSU_VERSION" >> $GITHUB_ENV
 
     - name: Build kernel
       run: |
@@ -84,5 +86,5 @@ jobs:
     - name: Upload AnyKernel3
       uses: actions/upload-artifact@v4
       with:
-        name: AK3-OPAce2P-A14-KSU-${{ env.BUILD_TIME }}
+        name: AK3-OPAce2P-A14${{ env.UPLOADNAME }}-${{ env.BUILD_TIME }}
         path: kernel_workspace/AnyKernel3/*
