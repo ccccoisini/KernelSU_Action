@@ -4,6 +4,9 @@ on:
     - cron: '0 18 * * *'
   workflow_dispatch:
 
+env:
+  TZ: Asia/Shanghai
+
 jobs:
   build:
     name: Build Kernel by ${{ github.actor }}
