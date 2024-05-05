@@ -224,6 +224,7 @@ jobs:
             wget https://mirrorbits.lineageos.org/full/lemonades/$BootDate/boot.img
             BootDate=$(date -d "$BootDate -1 day" +%Y%m%d) 
         done
+        echo "HAVE_SOURCE_BOOT_IMAGE=true" >> $GITHUB_ENV
 
     - name: Setup KernelSU
       if: env.ENABLE_KERNELSU == 'true'
@@ -368,6 +369,7 @@ jobs:
         ./magiskboot unpack boot.img
         mv -f Image kernel
         ./magiskboot repack boot.img
+        echo "MAKE_BOOT_IMAGE_IS_OK=true" >> $GITHUB_ENV
     
     - name: Upload ${{ env.KERNEL_IMAGE_NAME }}
       if: env.CHECK_FILE_IS_OK == 'true'
