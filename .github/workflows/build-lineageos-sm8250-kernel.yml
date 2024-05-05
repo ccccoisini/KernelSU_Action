@@ -168,11 +168,11 @@ jobs:
           echo "GCC_32=CROSS_COMPILE=$GITHUB_WORKSPACE/kernel_workspace/gcc-32/bin/${{ env.CUSTOM_GCC_32_BIN }}" >> $GITHUB_ENV
         fi
 
-    - name: Download mkbootimg tools
+    - name: Make bootimg tools
       if: env.BUILD_BOOT_IMG == 'true'
       run: |
-        cd $GITHUB_WORKSPACE/kernel_workspace
-        git clone https://android.googlesource.com/platform/system/tools/mkbootimg tools -b master-kernel-build-2022 --depth=1
+        cd $GITHUB_WORKSPACE/boot
+        chmod +x magiskboot
 
     - name: Download kernel source
       run: |
@@ -192,12 +192,38 @@ jobs:
       if: env.BUILD_BOOT_IMG == 'true'
       run: |
         cd $GITHUB_WORKSPACE/kernel_workspace
-        wget -O boot-source.img ${{ env.SOURCE_BOOT_IMAGE }}
-        if [ -f boot-source.img ]; then
-            echo "FORMAT_MKBOOTING=$(echo `tools/unpack_bootimg.py --boot_img=boot-source.img --format mkbootimg`)" >> $GITHUB_ENV
-            echo "HAVE_SOURCE_BOOT_IMAGE=true" >> $GITHUB_ENV
-        fi
-  
+        mkdir boot-OPlus8Pro && cd boot-OPlus8Pro
+        BootDate=$(TZ=Asia/Shanghai date "+%Y%m%d")
+        while [ ! -f boot.img ]
+        do
+            wget https://mirrorbits.lineageos.org/full/instantnoodlep/$BootDate/boot.img
+            BootDate=$(date -d "$BootDate -1 day" +%Y%m%d) 
+        done
+        cd $GITHUB_WORKSPACE/kernel_workspace
+        mkdir boot-OPlus8 && cd boot-OPlus8
+        BootDate=$(TZ=Asia/Shanghai date "+%Y%m%d")
+        while [ ! -f boot.img ]
+        do
+            wget https://mirrorbits.lineageos.org/full/instantnoodle/$BootDate/boot.img
+            BootDate=$(date -d "$BootDate -1 day" +%Y%m%d) 
+        done
+        cd $GITHUB_WORKSPACE/kernel_workspace
+        mkdir boot-OPlus8T && cd boot-OPlus8T
+        BootDate=$(TZ=Asia/Shanghai date "+%Y%m%d")
+        while [ ! -f boot.img ]
+        do
+            wget https://mirrorbits.lineageos.org/full/kebab/$BootDate/boot.img
+            BootDate=$(date -d "$BootDate -1 day" +%Y%m%d) 
+        done
+        cd $GITHUB_WORKSPACE/kernel_workspace
+        mkdir boot-OPlus9R && cd boot-OPlus9R
+        BootDate=$(TZ=Asia/Shanghai date "+%Y%m%d")
+        while [ ! -f boot.img ]
+        do
+            wget https://mirrorbits.lineageos.org/full/lemonades/$BootDate/boot.img
+            BootDate=$(date -d "$BootDate -1 day" +%Y%m%d) 
+        done
+
     - name: Setup KernelSU
       if: env.ENABLE_KERNELSU == 'true'
       run: |
@@ -321,15 +347,26 @@ jobs:
       if: env.HAVE_SOURCE_BOOT_IMAGE == 'true' && env.CHECK_FILE_IS_OK == 'true'
       run: |
         cd $GITHUB_WORKSPACE/kernel_workspace
-        tools/unpack_bootimg.py --boot_img boot-source.img
-        cp android-kernel/out/arch/${{ env.ARCH }}/boot/${{ env.KERNEL_IMAGE_NAME }} out/kernel
-        tools/mkbootimg.py ${{ env.FORMAT_MKBOOTING }} -o boot.img
-        if [ -f boot.img ]; then
-            echo "MAKE_BOOT_IMAGE_IS_OK=true" >> $GITHUB_ENV
-        else
-            echo "Boot image is empty"
-            exit 1
-        fi
+        cp boot/magiskboot android-kernel/out/arch/${{ env.ARCH }}/boot/${{ env.KERNEL_IMAGE_NAME }} boot-OPlus8Pro/
+        cp boot/magiskboot android-kernel/out/arch/${{ env.ARCH }}/boot/${{ env.KERNEL_IMAGE_NAME }} boot-OPlus8/
+        cp boot/magiskboot android-kernel/out/arch/${{ env.ARCH }}/boot/${{ env.KERNEL_IMAGE_NAME }} boot-OPlus8T/
+        cp boot/magiskboot android-kernel/out/arch/${{ env.ARCH }}/boot/${{ env.KERNEL_IMAGE_NAME }} boot-OPlus9R/
+        cd boot-OPlus8Pro
+        ./magiskboot unpack boot.img
+        mv -f Image kernel
+        ./magiskboot repack boot.img
+        cd ../boot-OPlus8
+        ./magiskboot unpack boot.img
+        mv -f Image kernel
+        ./magiskboot repack boot.img
+        cd ../boot-OPlus8T
+        ./magiskboot unpack boot.img
+        mv -f Image kernel
+        ./magiskboot repack boot.img
+        cd ../boot-OPlus9R
+        ./magiskboot unpack boot.img
+        mv -f Image kernel
+        ./magiskboot repack boot.img
     
     - name: Upload ${{ env.KERNEL_IMAGE_NAME }}
       if: env.CHECK_FILE_IS_OK == 'true'
@@ -352,9 +389,30 @@ jobs:
         name: dtbo-${{ env.DEVICE }}-${{ env.BUILD_TIME }}
         path: kernel_workspace/android-kernel/out/arch/${{ env.ARCH }}/boot/dtbo.img
 
-    - name: Upload boot image
+    - name: Upload 8Pro boot image
       if: env.MAKE_BOOT_IMAGE_IS_OK == 'true'
       uses: actions/upload-artifact@v4
       with:
-        name: boot${{ env.LOCALVERSION }}${{ env.UPLOADNAME }}-${{ env.DEVICE }}-${{ env.BUILD_TIME }}
-        path: kernel_workspace/boot.img
+        name: boot-OPlus8Pro${{ env.UPLOADNAME }}-${{ env.BUILD_TIME }}
+        path: kernel_workspace/boot-OPlus8Pro/new-boot.img
+
+    - name: Upload 8 boot image
+      if: env.MAKE_BOOT_IMAGE_IS_OK == 'true'
+      uses: actions/upload-artifact@v4
+      with:
+        name: boot-OPlus8${{ env.UPLOADNAME }}-${{ env.BUILD_TIME }}
+        path: kernel_workspace/boot-OPlus8/new-boot.img
+
+    - name: Upload 8T boot image
+      if: env.MAKE_BOOT_IMAGE_IS_OK == 'true'
+      uses: actions/upload-artifact@v4
+      with:
+        name: boot-OPlus8T${{ env.UPLOADNAME }}-${{ env.BUILD_TIME }}
+        path: kernel_workspace/boot-OPlus8T/new-boot.img
+
+    - name: Upload 9R boot image
+      if: env.MAKE_BOOT_IMAGE_IS_OK == 'true'
+      uses: actions/upload-artifact@v4
+      with:
+        name: boot-OPlus9R${{ env.UPLOADNAME }}-${{ env.BUILD_TIME }}
+        path: kernel_workspace/boot-OPlus9R/new-boot.img
