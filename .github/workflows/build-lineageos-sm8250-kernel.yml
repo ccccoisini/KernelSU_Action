@@ -190,11 +190,11 @@ jobs:
 
     - name: Download source boot image
       if: env.BUILD_BOOT_IMG == 'true'
-      continue-on-error: true
       run: |
         cd $GITHUB_WORKSPACE/kernel_workspace
         mkdir boot-OPlus8Pro && cd boot-OPlus8Pro
         BootDate=$(TZ=Asia/Shanghai date "+%Y%m%d")
+        set +e
         while [ ! -f boot.img ]
         do
             wget https://mirrorbits.lineageos.org/full/instantnoodlep/$BootDate/boot.img
