@@ -4,6 +4,9 @@ on:
     - cron: '0 18 * * *'
   workflow_dispatch:
 
+env:
+  TZ: Asia/Shanghai
+
 jobs:
   build:
     name: Build Kernel by ${{ github.actor }}
@@ -182,6 +185,8 @@ jobs:
         fi
         cd $GITHUB_WORKSPACE/kernel_workspace/android-kernel/scripts
         sed -i 's/ -dirty//g' setlocalversion
+        cd $GITHUB_WORKSPACE/patches
+        sed -i '1687 r BACKPORT.c' $GITHUB_WORKSPACE/kernel_workspace/android-kernel/fs/namespace.c
 
     - name: Download source boot image
       if: env.BUILD_BOOT_IMG == 'true'
