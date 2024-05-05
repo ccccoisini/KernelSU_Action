@@ -1,6 +1,11 @@
 name: Build LineageOS SM8350 Kernel
 on:
+  schedule:
+    - cron: '0 18 * * 1,2'
   workflow_dispatch:
+
+env:
+  TZ: Asia/Shanghai
 
 jobs:
   build:
