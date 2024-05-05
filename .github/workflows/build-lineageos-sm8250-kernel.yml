@@ -1,7 +1,7 @@
 name: Build LineageOS SM8250 Kernel
 on:
   schedule:
-    - cron: '0 19 * * 1'
+    - cron: '0 19 * * 5,6'
   workflow_dispatch:
 
 env:
