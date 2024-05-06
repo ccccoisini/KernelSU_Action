@@ -208,7 +208,7 @@ jobs:
         while [ ! -f boot.img ]
         do
             wget https://mirrorbits.lineageos.org/full/instantnoodle/$BootDate/boot.img
-            OPlus8PDate=$BootDate
+            OPlus8Date=$BootDate
             BootDate=$(date -d "$BootDate -1 day" +%Y%m%d) 
         done
         echo "BOOT_8_DATE=$OPlus8Date" >> $GITHUB_ENV
