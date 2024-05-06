@@ -198,7 +198,7 @@ jobs:
         while [ ! -f boot.img ]
         do
             wget https://mirrorbits.lineageos.org/full/instantnoodlep/$BootDate/boot.img
-            OPlus8ProDate=$Bootdate
+            OPlus8ProDate=$BootDate
             BootDate=$(date -d "$BootDate -1 day" +%Y%m%d) 
         done
         echo "BOOT_8PRO_DATE=$OPlus8ProDate" >> $GITHUB_ENV
@@ -208,7 +208,7 @@ jobs:
         while [ ! -f boot.img ]
         do
             wget https://mirrorbits.lineageos.org/full/instantnoodle/$BootDate/boot.img
-            OPlus8PDate=$Bootdate
+            OPlus8PDate=$BootDate
             BootDate=$(date -d "$BootDate -1 day" +%Y%m%d) 
         done
         echo "BOOT_8_DATE=$OPlus8Date" >> $GITHUB_ENV
@@ -218,7 +218,7 @@ jobs:
         while [ ! -f boot.img ]
         do
             wget https://mirrorbits.lineageos.org/full/kebab/$BootDate/boot.img
-            OPlus8TDate=$Bootdate
+            OPlus8TDate=$BootDate
             BootDate=$(date -d "$BootDate -1 day" +%Y%m%d) 
         done
         echo "BOOT_8T_DATE=$OPlus8TDate" >> $GITHUB_ENV
@@ -228,7 +228,7 @@ jobs:
         while [ ! -f boot.img ]
         do
             wget https://mirrorbits.lineageos.org/full/lemonades/$BootDate/boot.img
-            OPlus9RDate=$Bootdate
+            OPlus9RDate=$BootDate
             BootDate=$(date -d "$BootDate -1 day" +%Y%m%d) 
         done
         echo "BOOT_9R_DATE=$OPlus9RDate" >> $GITHUB_ENV
