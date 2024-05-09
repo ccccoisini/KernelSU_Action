@@ -1,7 +1,5 @@
 name: Build Nameless SM8250 Kernel
 on:
-  schedule:
-    - cron: '0 18 * * *'
   workflow_dispatch:
 
 env:
