@@ -1,4 +1,4 @@
-name: Build Nameless OPlus SM8250 Kernel
+name: Build Test Kernel
 
 on:
   workflow_dispatch:
