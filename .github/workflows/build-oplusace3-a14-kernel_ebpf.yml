@@ -66,13 +66,11 @@ jobs:
         THREAD=14
         make -j"$THREAD" "${TOOL_ARGS[@]}" O=${OUT_DIR}  ${DEFCONFIG}
 
-        cd ${OUT_DIR}
         sed -i '$aCONFIG_DEBUG_INFO=y' .config
         sed -i '$aCONFIG_DEBUG_INFO_DWARF4=y' .config
         sed -i '$aCONFIG_DEBUG_INFO_BTF=y' .config
         sed -i '$aCONFIG_FRAME_WARN=4096' .config
         echo "sed done"
-        cd ..
         
         scripts/config --file ${OUT_DIR}/.config -e LTO_CLANG -d LTO_NONE -e LTO_CLANG_THIN -d LTO_CLANG_FULL -e THINLTO
         THREAD=$(($(nproc --all) - 1))
