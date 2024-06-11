@@ -72,7 +72,7 @@ jobs:
         sed -i '$aCONFIG_DEBUG_INFO_BTF=y' .config
         sed -i '$aCONFIG_FRAME_WARN=4096' .config
         echo "sed done"
-        cd ${KERNEL_DIR}
+        cd ..
         
         scripts/config --file ${OUT_DIR}/.config -e LTO_CLANG -d LTO_NONE -e LTO_CLANG_THIN -d LTO_CLANG_FULL -e THINLTO
         THREAD=$(($(nproc --all) - 1))
