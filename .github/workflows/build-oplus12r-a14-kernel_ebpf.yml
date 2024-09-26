@@ -44,7 +44,7 @@ jobs:
       run: |
         cd $GITHUB_WORKSPACE/kernel_workspace/kernel_platform/common
         rm -rf KernelSU drivers/kernelsu
-        curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s main
+        curl -LSs "https://raw.githubusercontent.com/ccccoisini/KernelSU/main/kernel/setup.sh" | bash -s main
 
     - name: Build kernel
       run: |
